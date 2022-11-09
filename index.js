@@ -16,6 +16,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     const serviceCollection = client.db('dentalWhiz').collection('services')
+    const reviewsCollection = client.db('dentalWhiz').collection('reviews')
+
     try {
         // get Homeservices
         app.get('/services', async (req, res) => {
@@ -24,6 +26,28 @@ async function run() {
             const services = await cursor.toArray()
             res.send(services)
         })
+        // get service by id
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const service = await serviceCollection.findOne(query)
+            res.send(service)
+        })
+
+        // get reviews
+        app.get('/reviews', async (req, res) => {
+            const query = {}
+            const cursor = reviewsCollection.find(query)
+            const reviews = await cursor.toArray()
+            res.send(reviews)
+        })
+
+        app.post('/reviews', async (req, res) => {
+            const review = req.body
+            const result = await reviewsCollection.insertOne(review)
+            res.send(result)
+        })
+
     }
     finally {
 
