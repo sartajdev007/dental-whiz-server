@@ -26,6 +26,7 @@ async function run() {
             const services = await cursor.toArray()
             res.send(services)
         })
+        // add new service
         app.post('/services', async (req, res) => {
             const newService = req.body
             const result = await serviceCollection.insertOne(newService)
@@ -42,7 +43,7 @@ async function run() {
         // get reviews
         app.get('/reviews', async (req, res) => {
             const query = {}
-            const cursor = reviewsCollection.find(query)
+            const cursor = reviewsCollection.find(query).sort({ time: -1 })
             const reviews = await cursor.toArray()
             res.send(reviews)
         })
