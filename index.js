@@ -26,6 +26,11 @@ async function run() {
             const services = await cursor.toArray()
             res.send(services)
         })
+        app.post('/services', async (req, res) => {
+            const newService = req.body
+            const result = await serviceCollection.insertOne(newService)
+            res.send(result)
+        })
         // get service by id
         app.get('/services/:id', async (req, res) => {
             const id = req.params.id
